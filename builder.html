@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ساخت رزومه | QafCV</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: { fontFamily: { sans: ['Vazirmatn', 'sans-serif'] },
+            colors: { primary: { 50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca' } } } }
+        }
+    </script>
+    <style>
+        body { font-family: 'Vazirmatn', sans-serif; }
+        [x-cloak] { display: none !important; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .dark ::-webkit-scrollbar-thumb { background: #334155; }
+        
+        .resume-preview {
+            font-family: 'Vazirmatn', sans-serif;
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.2);
+        }
+
+        .r-section-title {
+            position: relative;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .r-section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            right: 0;
+            width: 40px;
+            height: 2px;
+            background-color: #4f46e5;
+        }
+        .r-section-title-dark {
+            position: relative;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #334155;
+        }
+        .r-section-title-dark::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            right: 0;
+            width: 40px;
+            height: 2px;
+            background-color: #818cf8;
+        }
+
+        [contenteditable="true"] {
+            outline: none;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+            padding: 2px 4px;
+            margin: -2px -4px;
+            cursor: text;
+        }
+        [contenteditable="true"]:hover {
+            background-color: rgba(99, 102, 241, 0.1);
+            box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.3) inset;
+        }
+        [contenteditable="true"]:focus {
+            background-color: rgba(99, 102, 241, 0.15);
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.5) inset;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 5px;
+            outline: none;
+        }
+        .dark input[type="range"] { background: #334155; }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            background: #4f46e5;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="font-sans bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-200 transition-colors duration-300" 
+      x-data="cvBuilder()" x-cloak>
+
+    <!-- Top Bar -->
+    <header class="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-6 sticky top-0 z-30">
+        <div class="flex items-center space-x-3 space-x-reverse">
+            <a href="dashboard.html" class="text-slate-500 hover:text-primary-600 transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            </a>
+            <h1 class="text-lg font-bold hidden sm:block">ساخت رزومه جدید</h1>
+        </div>
+
+        <div class="sm:hidden flex bg-slate-100 dark:bg-slate-800 p-1 rounded-lg">
+            <button @click="mobileView = 'edit'" :class="mobileView === 'edit' ? 'bg-white dark:bg-slate-700 shadow-sm text-primary-600' : 'text-slate-500'" class="px-3 py-1 rounded-md text-xs font-medium">ویرایش</button>
+            <button @click="mobileView = 'preview'" :class="mobileView === 'preview' ? 'bg-white dark:bg-slate-700 shadow-sm text-primary-600' : 'text-slate-500'" class="px-3 py-1 rounded-md text-xs font-medium">پیش‌نمایش</button>
+        </div>
+
+        <div class="flex items-center space-x-3 space-x-reverse">
+            <button class="hidden sm:inline-flex items-center px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition">ذخیره پیش‌نویس</button>
+            <button class="inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-primary-600 hover:bg-primary-700 rounded-lg shadow-lg shadow-primary-600/30 transition">
+                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                دانلود PDF
+            </button>
+        </div>
+    </header>
+
+    <div class="flex">
+        
+        <!-- ================= EDIT PANEL (Right Side) ================= -->
+        <div class="w-full sm:w-1/2 lg:w-[600px] p-6 lg:p-8 space-y-6 overflow-y-auto h-[calc(100vh-4rem)]" :class="mobileView === 'edit' ? 'block' : 'hidden sm:block'">
+            
+            <!-- Progress Bar with Labels -->
+            <div class="flex items-start justify-between mb-8 gap-2 overflow-x-auto pb-2">
+                <template x-for="(s, index) in steps" :key="index">
+                    <div class="flex items-center flex-1 last:flex-none min-w-[80px]">
+                        <div @click="goToStep(index)" class="flex flex-col items-center cursor-pointer w-full">
+                            <div :class="step >= index ? 'bg-primary-600 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-400'" class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm transition-all shrink-0">
+                                <span x-show="step > index">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                                </span>
+                                <span x-show="step <= index" x-text="index + 1"></span>
+                            </div>
+                            <span class="text-[10px] sm:text-xs mt-1 whitespace-nowrap" :class="step >= index ? 'text-primary-600 dark:text-primary-400 font-medium' : 'text-slate-400'" x-text="s"></span>
+                        </div>
+                        <div x-show="index < steps.length - 1" :class="step > index ? 'bg-primary-600' : 'bg-slate-200 dark:bg-slate-700'" class="flex-1 h-1 mx-2 mt-4 rounded-full transition-all"></div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Step 1: Personal Info -->
+            <div x-show="step === 0" class="space-y-6 animate-fade-in-up" style="animation-duration: 0.3s;">
+                <h2 class="text-xl font-bold">اطلاعات شخصی</h2>
+                
+                <!-- Profile Photo Upload -->
+                <div class="flex flex-col items-center mb-4">
+                    <div class="w-28 h-28 rounded-full bg-slate-100 border-2 border-dashed border-slate-300 dark:border-slate-700 flex items-center justify-center overflow-hidden cursor-pointer hover:border-primary-500 transition relative group">
+                        <img x-show="data.photo" :src="data.photo" class="w-full h-full object-cover">
+                        <svg x-show="!data.photo" class="w-10 h-10 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                            <span class="text-white text-xs">تغییر عکس</span>
+                        </div>
+                    </div>
+                    <input type="file" accept="image/*" @change="handlePhotoUpload($event)" class="mt-3 text-xs text-slate-500 file:mr-2 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:bg-primary-50 file:text-primary-600 hover:file:bg-primary-100 cursor-pointer">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="col-span-2">
+                        <label class="block text-sm font-medium text-slate-500 mb-1.5">نام و نام خانوادگی</label>
+                        <input type="text" x-model="data.name" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-transparent focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all" placeholder="مثال: حمیدالله کریمی">
+                    </div>
+                    <div class="col-span-2">
+                        <label class="block text-sm font-medium text-slate-500 mb-1.5">عنوان شغلی</label>
+                        <input type="text" x-model="data.title" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-transparent focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all" placeholder="مثال: طراح گرافیک">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-500 mb-1.5">ایمیل</label>
+                        <input type="email" x-model="data.email" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-transparent focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all" placeholder="email@example.com">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-500 mb-1.5">شماره تماس</label>
+                        <input type="text" x-model="data.phone" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-transparent focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all" placeholder="09123456789">
+                    </div>
+                    <div class="col-span-2">
+                        <label class="block text-sm font-medium text-slate-500 mb-1.5">آدرس</label>
+                        <input type="text" x-model="data.address" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-transparent focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all" placeholder="تهران، خیابان آزادی، پلاک ۱۲">
+                    </div>
+                    <div class="col-span-2">
+                        <label class="block text-sm font-medium text-slate-500 mb-1.5">وب‌سایت</label>
+                        <input type="text" x-model="data.website" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-transparent focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all" placeholder="www.myportfolio.ir">
+                    </div>
+                    <div class="col-span-2">
+                        <label class="block text-sm font-medium text-slate-500 mb-1.5">درباره من</label>
+                        <textarea x-model="data.about" rows="4" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-transparent focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all resize-none" placeholder="خلاصه‌ای از مهارت‌ها و تجربیات شما..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Experiences -->
+            <div x-show="step === 1" class="space-y-6 animate-fade-in-up" style="animation-duration: 0.3s;">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold">سوابق کاری</h2>
+                    <button @click="addExperience()" class="text-sm text-primary-600 dark:text-primary-400 font-medium flex items-center hover:bg-primary-50 dark:hover:bg-primary-500/10 px-3 py-1.5 rounded-lg transition">
+                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg> افزودن سابقه
+                    </button>
+                </div>
+                
+                <template x-for="(exp, index) in data.experiences" :key="index">
+                    <div class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 relative">
+                        <button @click="removeExperience(index)" x-show="data.experiences.length > 1" class="absolute top-4 left-4 text-slate-400 hover:text-red-500 transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        </button>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="col-span-2">
+                                <label class="block text-xs font-medium text-slate-500 mb-1.5">سمت شغلی</label>
+                                <input type="text" x-model="exp.role" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 focus:border-primary-500 outline-none text-sm" placeholder="طراح ارشد گرافیک">
+                            </div>
+                            <div class="col-span-2">
+                                <label class="block text-xs font-medium text-slate-500 mb-1.5">نام شرکت</label>
+                                <input type="text" x-model="exp.company" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 focus:border-primary-500 outline-none text-sm" placeholder="شرکت دیجی‌کالا">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 mb-1.5">تاریخ شروع</label>
+                                <input type="text" x-model="exp.startDate" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 focus:border-primary-500 outline-none text-sm" placeholder="۱۴۰۰">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 mb-1.5">تاریخ پایان</label>
+                                <input type="text" x-model="exp.endDate" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 focus:border-primary-500 outline-none text-sm" placeholder="۱۴۰۳">
+                            </div>
+                            <div class="col-span-2">
+                                <label class="block text-xs font-medium text-slate-500 mb-1.5">توضیحات</label>
+                                <textarea x-model="exp.desc" rows="2" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 focus:border-primary-500 outline-none text-sm resize-none" placeholder="مسئولیت‌ها و دستاوردهای شما..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Step 3: Educations -->
+            <div x-show="step === 2" class="space-y-6 animate-fade-in-up" style="animation-duration: 0.3s;">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold">تحصیلات</h2>
+                    <button @click="addEducation()" class="text-sm text-primary-600 dark:text-primary-400 font-medium flex items-center hover:bg-primary-50 dark:hover:bg-primary-500/10 px-3 py-1.5 rounded-lg transition">
+                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg> افزودن تحصیل
+                    </button>
+                </div>
+                
+                <template x-for="(edu, index) in data.educations" :key="index">
+                    <div class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 relative">
+                        <button @click="removeEducation(index)" x-show="data.educations.length > 1" class="absolute top-4 left-4 text-slate-400 hover:text-red-500 transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        </button>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="col-span-2">
+                                <label class="block text-xs font-medium text-slate-500 mb-1.5">مقطع تحصیلی</label>
+                                <input type="text" x-model="edu.degree" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 focus:border-primary-500 outline-none text-sm" placeholder="کارشناسی ارشد طراحی گرافیک">
+                            </div>
+                            <div class="col-span-2">
+                                <label class="block text-xs font-medium text-slate-500 mb-1.5">نام دانشگاه</label>
+                                <input type="text" x-model="edu.uni" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 focus:border-primary-500 outline-none text-sm" placeholder="دانشگاه تهران">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 mb-1.5">تاریخ شروع</label>
+                                <input type="text" x-model="edu.startDate" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 focus:border-primary-500 outline-none text-sm" placeholder="۱۳۹۴">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 mb-1.5">تاریخ پایان</label>
+                                <input type="text" x-model="edu.endDate" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 focus:border-primary-500 outline-none text-sm" placeholder="۱۳۹۶">
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Step 4: Skills & Languages -->
+            <div x-show="step === 3" class="space-y-8 animate-fade-in-up" style="animation-duration: 0.3s;">
+                <div>
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold">مهارت‌ها</h2>
+                        <button @click="addSkill()" class="text-sm text-primary-600 dark:text-primary-400 font-medium flex items-center hover:bg-primary-50 dark:hover:bg-primary-500/10 px-3 py-1.5 rounded-lg transition">
+                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg> افزودن مهارت
+                        </button>
+                    </div>
+                    <template x-for="(skill, index) in data.skills" :key="index">
+                        <div class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 flex items-center gap-4 mb-4">
+                            <div class="flex-1">
+                                <label class="block text-xs font-medium text-slate-500 mb-1.5">نام مهارت</label>
+                                <input type="text" x-model="skill.name" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 focus:border-primary-500 outline-none text-sm" placeholder="مثال: فتوشاپ">
+                            </div>
+                            <div class="w-1/2">
+                                <label class="flex justify-between text-xs font-medium text-slate-500 mb-2">
+                                    <span>درصد تسلط</span>
+                                    <span class="font-bold text-primary-600" x-text="skill.level + '%'"></span>
+                                </label>
+                                <input type="range" x-model="skill.level" min="0" max="100" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer dark:bg-slate-700 mt-3">
+                            </div>
+                            <button @click="removeSkill(index)" x-show="data.skills.length > 1" class="mt-6 text-slate-400 hover:text-red-500 transition p-1">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            </button>
+                        </div>
+                    </template>
+                </div>
+
+                <div class="pt-4 border-t border-slate-200 dark:border-slate-800">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold">زبان‌ها</h2>
+                        <button @click="addLanguage()" class="text-sm text-primary-600 dark:text-primary-400 font-medium flex items-center hover:bg-primary-50 dark:hover:bg-primary-500/10 px-3 py-1.5 rounded-lg transition">
+                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg> افزودن زبان
+                        </button>
+                    </div>
+                    <template x-for="(lang, index) in data.languages" :key="index">
+                        <div class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 flex items-center gap-4 mb-4">
+                            <div class="flex-1">
+                                <label class="block text-xs font-medium text-slate-500 mb-1.5">نام زبان</label>
+                                <input type="text" x-model="lang.name" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 focus:border-primary-500 outline-none text-sm" placeholder="انگلیسی">
+                            </div>
+                            <div class="flex-1">
+                                <label class="block text-xs font-medium text-slate-500 mb-1.5">سطح تسلط</label>
+                                <input type="text" x-model="lang.level" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 focus:border-primary-500 outline-none text-sm" placeholder="پیشرفته (C1)">
+                            </div>
+                            <button @click="removeLanguage(index)" x-show="data.languages.length > 1" class="mt-6 text-slate-400 hover:text-red-500 transition p-1">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            </button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Step 5: References -->
+            <div x-show="step === 4" class="space-y-6 animate-fade-in-up" style="animation-duration: 0.3s;">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold">معرفین</h2>
+                    <button @click="addReference()" class="text-sm text-primary-600 dark:text-primary-400 font-medium flex items-center hover:bg-primary-50 dark:hover:bg-primary-500/10 px-3 py-1.5 rounded-lg transition">
+                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg> افزودن معرف
+                    </button>
+                </div>
+                
+                <template x-for="(ref, index) in data.references" :key="index">
+                    <div class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 relative">
+                        <button @click="removeReference(index)" x-show="data.references.length > 1" class="absolute top-4 left-4 text-slate-400 hover:text-red-500 transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        </button>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="col-span-2">
+                                <label class="block text-xs font-medium text-slate-500 mb-1.5">نام و نام خانوادگی</label>
+                                <input type="text" x-model="ref.name" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 focus:border-primary-500 outline-none text-sm" placeholder="دکتر سید علی حسینی">
+                            </div>
+                            <div class="col-span-2">
+                                <label class="block text-xs font-medium text-slate-500 mb-1.5">سمت و شرکت</label>
+                                <input type="text" x-model="ref.role" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 focus:border-primary-500 outline-none text-sm" placeholder="مدیرعامل شرکت دیجی‌آرت">
+                            </div>
+                            <div class="col-span-2">
+                                <label class="block text-xs font-medium text-slate-500 mb-1.5">شماره تماس</label>
+                                <input type="text" x-model="ref.phone" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 focus:border-primary-500 outline-none text-sm" placeholder="۰۹۱۲ ۱۱۲ ۲۳۳۴">
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="flex justify-between pt-6 border-t border-slate-200 dark:border-slate-800">
+                <button @click="prevStep()" :disabled="step === 0" class="px-6 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed">مرحله قبل</button>
+                <button @click="nextStep()" x-show="step < steps.length - 1" class="px-6 py-2.5 text-sm font-semibold text-white bg-primary-600 hover:bg-primary-700 rounded-xl shadow-lg shadow-primary-600/30 transition">مرحله بعد</button>
+                <button x-show="step === steps.length - 1" class="px-6 py-2.5 text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow-lg shadow-emerald-600/30 transition">پایان و ذخیره</button>
+            </div>
+        </div>
+
+        <!-- ================= LIVE PREVIEW (Left Side) ================= -->
+        <div class="hidden sm:block sm:w-1/2 sm:flex-1 h-[calc(100vh-4rem)] sticky top-16 bg-slate-200 dark:bg-slate-900 p-6 lg:p-10 overflow-y-auto" :class="mobileView === 'preview' ? 'block' : 'hidden sm:block'">
+            
+            <div class="resume-preview bg-white w-full max-w-[800px] mx-auto aspect-[1/1.414] flex shadow-2xl overflow-hidden rounded-lg">
+                
+                <!-- Right Sidebar (Dark) -->
+                <aside class="w-1/3 bg-slate-800 text-slate-300 p-6 space-y-6">
+                    <div class="flex flex-col items-center text-center">
+                        <div class="w-24 h-24 rounded-full bg-slate-700 border-4 border-primary-500 mb-4 flex items-center justify-center text-3xl font-bold text-white overflow-hidden">
+                            <img x-show="data.photo" :src="data.photo" class="w-full h-full object-cover">
+                            <span x-show="!data.photo" x-text="data.name ? data.name.charAt(0) : '؟'"></span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="r-section-title-dark text-white text-sm font-bold uppercase tracking-wider">اطلاعات تماس</h3>
+                        <ul class="space-y-3 text-xs text-slate-400">
+                            <li x-show="data.email" class="flex items-start">
+                                <svg class="w-3.5 h-3.5 ml-2 mt-0.5 text-primary-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                <span contenteditable="true" @input="data.email = $event.target.textContent" x-text="data.email" class="break-all"></span>
+                            </li>
+                            <li x-show="data.phone" class="flex items-start">
+                                <svg class="w-3.5 h-3.5 ml-2 mt-0.5 text-primary-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                                <span contenteditable="true" @input="data.phone = $event.target.textContent" x-text="data.phone"></span>
+                            </li>
+                            <li x-show="data.address" class="flex items-start">
+                                <svg class="w-3.5 h-3.5 ml-2 mt-0.5 text-primary-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                <span contenteditable="true" @input="data.address = $event.target.textContent" x-text="data.address"></span>
+                            </li>
+                            <li x-show="data.website" class="flex items-start">
+                                <svg class="w-3.5 h-3.5 ml-2 mt-0.5 text-primary-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
+                                <span contenteditable="true" @input="data.website = $event.target.textContent" x-text="data.website"></span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="r-section-title-dark text-white text-sm font-bold uppercase tracking-wider">مهارت‌ها</h3>
+                        <div class="space-y-3">
+                            <template x-for="(skill, index) in data.skills" :key="index">
+                                <div>
+                                    <p class="text-xs font-medium mb-1 flex justify-between text-slate-300">
+                                        <span contenteditable="true" @input="skill.name = $event.target.textContent" x-text="skill.name"></span>
+                                        <span class="text-slate-500" x-text="skill.level + '%'"></span>
+                                    </p>
+                                    <div class="w-full bg-slate-700 rounded-full h-1.5">
+                                        <div class="bg-primary-500 h-1.5 rounded-full transition-all duration-500" :style="`width: ${skill.level}%`"></div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="r-section-title-dark text-white text-sm font-bold uppercase tracking-wider">زبان‌ها</h3>
+                        <ul class="space-y-2 text-xs">
+                            <template x-for="(lang, index) in data.languages" :key="index">
+                                <li class="flex justify-between border-b border-slate-700 pb-2">
+                                    <span contenteditable="true" @input="lang.name = $event.target.textContent" x-text="lang.name" class="text-slate-300"></span>
+                                    <span contenteditable="true" @input="lang.level = $event.target.textContent" x-text="lang.level" class="text-slate-500"></span>
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
+                </aside>
+
+                <!-- Main Content (Light) -->
+                <main class="w-2/3 p-8 text-slate-800 space-y-8 overflow-y-auto">
+                    
+                    <div class="mb-2">
+                        <h1 contenteditable="true" @input="data.name = $event.target.textContent" class="text-3xl font-extrabold text-slate-900" x-text="data.name || 'نام شما'"></h1>
+                        <p contenteditable="true" @input="data.title = $event.target.textContent" class="text-lg text-primary-600 font-medium mt-1" x-text="data.title || 'عنوان شغلی'"></p>
+                    </div>
+
+                    <div x-show="data.about">
+                        <h3 class="r-section-title text-slate-900 text-sm font-bold uppercase tracking-wider">درباره من</h3>
+                        <p contenteditable="true" @input="data.about = $event.target.textContent" class="text-sm text-slate-600 leading-relaxed text-justify" x-text="data.about"></p>
+                    </div>
+
+                    <div>
+                        <h3 class="r-section-title text-slate-900 text-sm font-bold uppercase tracking-wider">سوابق کاری</h3>
+                        <div class="space-y-5">
+                            <template x-for="(exp, index) in data.experiences" :key="index">
+                                <div class="relative pr-4 border-r-2 border-slate-100">
+                                    <div class="absolute top-1.5 right-[-5px] w-2.5 h-2.5 rounded-full bg-primary-500"></div>
+                                    <div class="flex flex-wrap justify-between items-center mb-1">
+                                        <h4 contenteditable="true" @input="exp.role = $event.target.textContent" class="font-bold text-slate-900" x-text="exp.role || 'سمت شغلی'"></h4>
+                                        <span class="text-xs font-medium bg-primary-50 text-primary-600 px-2 py-0.5 rounded">
+                                            <span contenteditable="true" @input="exp.startDate = $event.target.textContent" x-text="exp.startDate"></span> - <span contenteditable="true" @input="exp.endDate = $event.target.textContent" x-text="exp.endDate"></span>
+                                        </span>
+                                    </div>
+                                    <p contenteditable="true" @input="exp.company = $event.target.textContent" class="text-sm text-primary-600 font-medium mb-2" x-text="exp.company"></p>
+                                    <p contenteditable="true" @input="exp.desc = $event.target.textContent" class="text-sm text-slate-500 leading-relaxed" x-text="exp.desc"></p>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="r-section-title text-slate-900 text-sm font-bold uppercase tracking-wider">تحصیلات</h3>
+                        <div class="space-y-4">
+                            <template x-for="(edu, index) in data.educations" :key="index">
+                                <div class="bg-slate-50 p-4 rounded-lg border border-slate-100 flex items-start gap-4">
+                                    <div class="w-10 h-10 rounded-full bg-primary-50 flex items-center justify-center shrink-0">
+                                        <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"></path></svg>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="flex flex-wrap justify-between items-center">
+                                            <h4 contenteditable="true" @input="edu.degree = $event.target.textContent" class="font-bold text-slate-900" x-text="edu.degree || 'مقطع تحصیلی'"></h4>
+                                            <span class="text-xs text-slate-500 font-medium">
+                                                <span contenteditable="true" @input="edu.startDate = $event.target.textContent" x-text="edu.startDate"></span> - <span contenteditable="true" @input="edu.endDate = $event.target.textContent" x-text="edu.endDate"></span>
+                                            </span>
+                                        </div>
+                                        <p contenteditable="true" @input="edu.uni = $event.target.textContent" class="text-sm text-primary-600 mt-1" x-text="edu.uni"></p>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- References Section -->
+                    <div>
+                        <h3 class="r-section-title text-slate-900 text-sm font-bold uppercase tracking-wider">معرفین</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <template x-for="(ref, index) in data.references" :key="index">
+                                <div class="text-sm">
+                                    <p contenteditable="true" @input="ref.name = $event.target.textContent" class="font-bold text-slate-900" x-text="ref.name || 'نام معرف'"></p>
+                                    <p contenteditable="true" @input="ref.role = $event.target.textContent" class="text-xs text-primary-600 mt-0.5" x-text="ref.role"></p>
+                                    <p contenteditable="true" @input="ref.phone = $event.target.textContent" class="text-xs text-slate-500 mt-1" x-text="ref.phone"></p>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                </main>
+            </div>
+            
+        </div>
+    </div>
+
+    <script>
+        function cvBuilder() {
+            return {
+                steps: ['اطلاعات شخصی', 'سوابق کاری', 'تحصیلات', 'مهارت و زبان', 'معرفین'],
+                step: 0,
+                mobileView: 'edit',
+                data: {
+                    photo: null, // عکس پروفایل در اینجا به صورت Base64 ذخیره می‌شود
+                    name: 'حمیدالله کریمی',
+                    title: 'طراح گرافیک',
+                    email: 'koroush.nasiri@email.com',
+                    phone: '۰۹۱۲ ۳۴۵ ۶۷۸۹',
+                    address: 'تهران، خیابان آزادی، پلاک ۱۲',
+                    website: 'www.koroush-design.ir',
+                    about: 'طراح گرافیک خلاق و با انگیزه با بیش از ۶ سال تجربه در زمینه برندینگ، طراحی هویت بصری و تولید محتوای دیجیتال. مسلط به نرم‌افزارهای طراحی گرافیک و اصول رنگ و ترکیب‌بندی.',
+                    experiences: [
+                        { role: 'طراح ارشد گرافیک', company: 'شرکت دیجی‌کالا', startDate: '۱۴۰۰', endDate: 'اکنون', desc: 'طراحی و مدیریت کمپین‌های بصری برای مناسبت‌های خاص و هدایت تیم ۴ نفره طراحان.' }
+                    ],
+                    educations: [
+                        { degree: 'کارشناسی ارشد طراحی گرافیک', uni: 'دانشگاه تهران', startDate: '۱۳۹۴', endDate: '۱۳۹۶' }
+                    ],
+                    skills: [
+                        { name: 'ادوبی فتوشاپ', level: 95 },
+                        { name: 'ادوبی ایلوستریتور', level: 90 }
+                    ],
+                    languages: [
+                        { name: 'فارسی', level: 'زبان مادری' },
+                        { name: 'انگلیسی', level: 'پیشرفته (C1)' }
+                    ],
+                    references: [
+                        { name: 'دکتر سید علی حسینی', role: 'مدیرعامل شرکت دیجی‌آرت', phone: '۰۹۱۲ ۱۱۲ ۲۳۳۴' }
+                    ]
+                },
+                handlePhotoUpload(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (event) => {
+                            this.data.photo = event.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                },
+                nextStep() {
+                    if (this.step < this.steps.length - 1) this.step++;
+                },
+                prevStep() {
+                    if (this.step > 0) this.step--;
+                },
+                goToStep(index) {
+                    this.step = index;
+                },
+                addExperience() {
+                    this.data.experiences.push({ role: '', company: '', startDate: '', endDate: '', desc: '' });
+                },
+                removeExperience(index) {
+                    this.data.experiences.splice(index, 1);
+                },
+                addEducation() {
+                    this.data.educations.push({ degree: '', uni: '', startDate: '', endDate: '' });
+                },
+                removeEducation(index) {
+                    this.data.educations.splice(index, 1);
+                },
+                addSkill() {
+                    this.data.skills.push({ name: '', level: 50 });
+                },
+                removeSkill(index) {
+                    this.data.skills.splice(index, 1);
+                },
+                addLanguage() {
+                    this.data.languages.push({ name: '', level: '' });
+                },
+                removeLanguage(index) {
+                    this.data.languages.splice(index, 1);
+                },
+                addReference() {
+                    this.data.references.push({ name: '', role: '', phone: '' });
+                },
+                removeReference(index) {
+                    this.data.references.splice(index, 1);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

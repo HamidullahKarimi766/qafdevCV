@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ساخت پوشش‌نامه | QafCV</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script>
+        tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Vazirmatn', 'sans-serif'] }, colors: { primary: { 50: '#eef2ff', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca' } } } } }
+    </script>
+    <style>
+        body { font-family: 'Vazirmatn', sans-serif; }
+        [x-cloak] { display: none !important; }
+        .letter-preview { box-shadow: 0 10px 40px -10px rgba(0,0,0,0.2); }
+    </style>
+</head>
+<body class="font-sans bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-200 transition-colors duration-300" x-data="coverLetter()" x-cloak>
+
+    <header class="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-6 sticky top-0 z-30">
+        <h1 class="text-lg font-bold">ساخت پوشش‌نامه (Cover Letter)</h1>
+        <button class="inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-primary-600 hover:bg-primary-700 rounded-lg shadow-lg shadow-primary-600/30 transition">
+            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            دانلود PDF
+        </button>
+    </header>
+
+    <div class="flex flex-col md:flex-row">
+        <!-- Editor -->
+        <div class="w-full md:w-1/2 p-6 lg:p-8 space-y-6 overflow-y-auto h-[calc(100vh-4rem)]">
+            <div class="grid grid-cols-2 gap-4">
+                <div class="col-span-2">
+                    <label class="block text-sm font-medium text-slate-500 mb-1.5">نام شما</label>
+                    <input type="text" x-model="data.name" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-transparent focus:border-primary-500 outline-none" placeholder="حمیدالله کریمی">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-500 mb-1.5">نام شرکت گیرنده</label>
+                    <input type="text" x-model="data.company" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-transparent focus:border-primary-500 outline-none" placeholder="شرکت دیجی‌کالا">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-500 mb-1.5">سمت گیرنده (اختیاری)</label>
+                    <input type="text" x-model="data.hrName" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-transparent focus:border-primary-500 outline-none" placeholder="مدیر جذب و استخدام">
+                </div>
+                <div class="col-span-2">
+                    <label class="block text-sm font-medium text-slate-500 mb-1.5">موضوع نامه</label>
+                    <input type="text" x-model="data.subject" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-transparent focus:border-primary-500 outline-none" placeholder="درخواست همکاری برای موقعیت توسعه‌دهنده ارشد">
+                </div>
+                <div class="col-span-2">
+                    <label class="block text-sm font-medium text-slate-500 mb-1.5">متن نامه</label>
+                    <textarea x-model="data.body" rows="10" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-transparent focus:border-primary-500 outline-none resize-none text-sm leading-7" placeholder="با سلام، احتراماً به استحضار می‌رساند..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Preview -->
+        <div class="hidden md:block md:w-1/2 h-[calc(100vh-4rem)] sticky top-16 bg-slate-200 dark:bg-slate-900 p-6 lg:p-10 overflow-y-auto">
+            <div class="letter-preview bg-white w-full max-w-[800px] mx-auto aspect-[1/1.414] p-12 text-slate-800 leading-relaxed">
+                <div class="text-right mb-8">
+                    <h1 class="text-2xl font-extrabold text-slate-900" x-text="data.name || 'نام شما'"></h1>
+                    <div class="w-16 h-1 bg-primary-600 my-2"></div>
+                </div>
+                
+                <div class="text-sm text-slate-600 mb-6">
+                    <p x-text="data.subject || 'موضوع نامه'"></p>
+                </div>
+
+                <p class="text-sm mb-4">
+                    <span x-show="data.hrName" x-text="'جناب آقای/سرکار خانم ' + data.hrName"></span>
+                    <span x-show="!data.hrName">مدیر محترم جذب و استخدام</span>
+                    <span x-show="data.company" x-text="' شرکت ' + data.company"></span>
+                </p>
+
+                <p class="text-sm text-slate-700 whitespace-pre-line text-justify" x-text="data.body || 'متن نامه شما در اینجا نمایش داده می‌شود...'"></p>
+
+                <div class="mt-12 text-sm text-slate-600">
+                    <p>با تجدید احترام،</p>
+                    <p class="font-bold text-slate-900 mt-2" x-text="data.name"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function coverLetter() {
+            return {
+                data: {
+                    name: 'حمیدالله کریمی',
+                    company: 'شرکت دیجی‌کالا',
+                    hrName: 'مهندس رضایی',
+                    subject: 'درخواست همکاری برای موقعیت توسعه‌دهنده ارشد فرانت‌اند',
+                    body: 'با سلام و احترام،\n\nاینجانب حمیدالله کریمی، با بیش از ۵ سال تجربه برنامه‌نویسی تخصصی فرانت‌اند، علاقه‌مند به همکاری با مجموعه پیشروی شما می‌باشم. آشنایی عمیق من با اکوسیستم React و اصول طراحی مدرن، می‌تواند در توسعه محصولات شرکت شما موثر باشد.\n\nممنون می‌شوم رزومه ضمیمه را بررسی فرمایید.\n\nبا تشکر،'
+                }
+            }
+        }
+    </script>
+</body>
+</html>

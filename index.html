@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QafCV | ساخت رزومه و پورتفولیو حرفه‌ای</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Alpine.js for Interactivity -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Vazirmatn', 'sans-serif'] },
+                    colors: {
+                        primary: {
+                            50: '#eef2ff', 100: '#e0e7ff', 200: '#c7d2fe', 300: '#a5b4fc', 400: '#818cf8',
+                            500: '#6366f1', 600: '#4f46e5', 700: '#4338ca', 800: '#3730a3', 900: '#312e81',
+                        }
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        fadeInUp: { '0%': { opacity: 0, transform: 'translateY(20px)' }, '100%': { opacity: 1, transform: 'translateY(0)' } },
+                        float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Vazirmatn', sans-serif; }
+        [x-cloak] { display: none !important; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #6366f1; border-radius: 10px; }
+        
+        /* Advanced Glassmorphism Navbar */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+        }
+        .dark .glass-nav {
+            background: rgba(2, 6, 23, 0.75);
+            border-bottom: 1px solid rgba(30, 41, 59, 0.6);
+        }
+    </style>
+</head>
+<body class="font-sans bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 transition-colors duration-300">
+
+    <!-- ================= ADVANCED NAVBAR ================= -->
+    <nav x-data="{ open: false, darkMode: false, dropdown: false }" 
+         @keydown.window.escape="open = false"
+         class="fixed top-0 inset-x-0 z-50 glass-nav transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                
+                <!-- Logo -->
+                <div class="flex items-center space-x-2 space-x-reverse">
+                    <a href="index.html" class="flex items-center space-x-2 space-x-reverse">
+                        <div class="w-9 h-9 bg-primary-600 rounded-xl flex items-center justify-center shadow-lg shadow-primary-600/30">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        </div>
+                        <span class="text-xl font-extrabold tracking-tight">QafCV</span>
+                    </a>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-6 space-x-reverse">
+                    
+                    <!-- Platform Dropdown -->
+                    <div class="relative" @mouseenter="dropdown = true" @mouseleave="dropdown = false">
+                        <button class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition flex items-center">
+                            پلتفرم
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div x-show="dropdown" x-cloak x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" class="absolute top-full right-0 mt-2 w-64 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-800 p-2">
+                            <a href="dashboard.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                                <div class="w-8 h-8 bg-primary-50 dark:bg-primary-900/30 rounded-lg flex items-center justify-center shrink-0">
+                                    <svg class="w-4 h-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path></svg>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-slate-800 dark:text-white">داشبورد کاربری</h4>
+                                    <p class="text-xs text-slate-400">مدیریت رزومه‌ها و آمار</p>
+                                </div>
+                            </a>
+                            <a href="builder.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                                <div class="w-8 h-8 bg-emerald-50 dark:bg-emerald-900/30 rounded-lg flex items-center justify-center shrink-0">
+                                    <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-slate-800 dark:text-white">ساخت رزومه</h4>
+                                    <p class="text-xs text-slate-400">ادیتور پیشرفته با پیش‌نمایش زنده</p>
+                                </div>
+                            </a>
+                            <a href="portfolio.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                                <div class="w-8 h-8 bg-amber-50 dark:bg-amber-900/30 rounded-lg flex items-center justify-center shrink-0">
+                                    <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-slate-800 dark:text-white">پورتفولیو عمومی</h4>
+                                    <p class="text-xs text-slate-400">صفحه نمایش پروژه‌های شما</p>
+                                </div>
+                            </a>
+                            <a href="settings.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                                <div class="w-8 h-8 bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center justify-center shrink-0">
+                                    <svg class="w-4 h-4 text-slate-600 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-slate-800 dark:text-white">تنظیمات حساب</h4>
+                                    <p class="text-xs text-slate-400">مدیریت پروفایل و اشتراک</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <a href="#templates" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition">قالب‌ها</a>
+                    <a href="#features" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition">امکانات</a>
+                    <a href="#" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition">بلاگ</a>
+                    
+                    <!-- Dark Mode Toggle -->
+                    <button @click="darkMode = !darkMode; document.documentElement.classList.toggle('dark')" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                        <svg x-show="!darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                        <svg x-show="darkMode" x-cloak class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    </button>
+
+                    <a href="auth.html" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition">ورود</a>
+                    <a href="auth.html" class="text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 px-4 py-2 rounded-lg shadow-lg shadow-primary-600/30 transition transform hover:-translate-y-0.5">شروع رایگان</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button @click="darkMode = !darkMode; document.documentElement.classList.toggle('dark')" class="p-2 ml-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                        <svg x-show="!darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                        <svg x-show="darkMode" x-cloak class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    </button>
+                    <button @click="open = !open" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                        <svg x-show="!open" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                        <svg x-show="open" x-cloak class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div x-show="open" x-cloak x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" class="md:hidden glass-nav border-t border-slate-200 dark:border-slate-800" style="background: rgba(255,255,255,0.95);">
+            <div class="px-4 pt-3 pb-6 space-y-2">
+                
+                <a href="dashboard.html" @click="open=false" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                    <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path></svg>
+                    <span class="font-medium text-sm">داشبورد کاربری</span>
+                </a>
+                
+                <a href="builder.html" @click="open=false" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                    <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                    <span class="font-medium text-sm">ساخت رزومه جدید</span>
+                </a>
+                
+                <a href="portfolio.html" @click="open=false" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                    <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
+                    <span class="font-medium text-sm">پورتفولیو عمومی</span>
+                </a>
+
+                <div class="pt-2 mt-2 border-t border-slate-200 dark:border-slate-800">
+                    <a href="#templates" @click="open=false" class="block px-4 py-3 rounded-xl text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-900 transition">قالب‌ها</a>
+                    <a href="#features" @click="open=false" class="block px-4 py-3 rounded-xl text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-900 transition">امکانات</a>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 pt-2 mt-2 border-t border-slate-200 dark:border-slate-800">
+                    <a href="auth.html" class="w-full text-center px-4 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded-xl transition">ورود</a>
+                    <a href="auth.html" class="w-full text-center px-4 py-2.5 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-xl transition">شروع رایگان</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ================= HERO SECTION ================= -->
+    <header class="relative pt-32 pb-20 sm:pt-40 sm:pb-24 overflow-hidden">
+        <!-- Background Effects -->
+        <div class="absolute inset-0 z-[-1]">
+            <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary-300/30 dark:bg-primary-900/20 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/4"></div>
+            <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-emerald-300/20 dark:bg-emerald-900/10 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/4"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <!-- Hero Text -->
+                <div class="text-center lg:text-right animate-fade-in-up">
+                    <div class="inline-flex items-center px-4 py-1.5 rounded-full bg-primary-50 dark:bg-primary-900/30 border border-primary-200 dark:border-primary-800 text-primary-600 dark:text-primary-300 text-sm font-medium mb-6">
+                        <span class="w-2 h-2 bg-primary-500 rounded-full ml-2 animate-pulse"></span>
+                        پلتفرم ساخت رزومه نسل جدید
+                    </div>
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight mb-6">
+                        رزومه‌ای بساز <br class="hidden sm:block"> که <span class="text-transparent bg-clip-text bg-gradient-to-l from-primary-600 to-emerald-500">استخدامت کند</span>
+                    </h1>
+                    <p class="text-lg text-slate-600 dark:text-slate-400 mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+                        اطلاعات خود را وارد کنید، قالب دلخواهتان را انتخاب کنید و در کمتر از ۱۰ دقیقه یک رزومه حرفه‌ای PDF و یک صفحه پورتفولیو آنلاین داشته باشید.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                        <a href="auth.html" class="inline-flex items-center justify-center px-8 py-3.5 text-base font-semibold text-white bg-primary-600 hover:bg-primary-700 rounded-xl shadow-lg shadow-primary-600/30 transition transform hover:-translate-y-0.5">
+                            ساخت رزومه رایگان
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12"></path></svg>
+                        </a>
+                        <a href="#templates" class="inline-flex items-center justify-center px-8 py-3.5 text-base font-semibold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition transform hover:-translate-y-0.5">
+                            مشاهده قالب‌ها
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Hero Visual (CV Preview Mockup) -->
+                <div class="relative hidden lg:block animate-fade-in-up" style="animation-delay: 0.2s;">
+                    <div class="relative bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 p-6 transform rotate-3 hover:rotate-0 transition-transform duration-500 animate-float">
+                        <!-- Mock Header -->
+                        <div class="flex items-center space-x-4 space-x-reverse pb-4 border-b border-slate-100 dark:border-slate-800">
+                            <div class="w-16 h-16 bg-gradient-to-br from-primary-500 to-emerald-400 rounded-full"></div>
+                            <div>
+                                <div class="h-4 w-32 bg-slate-200 dark:bg-slate-700 rounded mb-2"></div>
+                                <div class="h-3 w-24 bg-slate-100 dark:bg-slate-800 rounded"></div>
+                            </div>
+                        </div>
+                        <!-- Mock Content -->
+                        <div class="mt-6 space-y-4">
+                            <div class="h-3 w-full bg-slate-100 dark:bg-slate-800 rounded"></div>
+                            <div class="h-3 w-5/6 bg-slate-100 dark:bg-slate-800 rounded"></div>
+                            <div class="grid grid-cols-2 gap-4 pt-4">
+                                <div class="h-20 bg-primary-50 dark:bg-primary-900/20 rounded-lg p-3">
+                                    <div class="h-2 w-16 bg-primary-200 dark:bg-primary-800 rounded mb-2"></div>
+                                    <div class="h-2 w-full bg-primary-100 dark:bg-primary-900 rounded"></div>
+                                </div>
+                                <div class="h-20 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg p-3">
+                                    <div class="h-2 w-16 bg-emerald-200 dark:bg-emerald-800 rounded mb-2"></div>
+                                    <div class="h-2 w-full bg-emerald-100 dark:bg-emerald-900 rounded"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Floating Elements -->
+                    <div class="absolute -top-6 -left-6 bg-white dark:bg-slate-900 p-4 rounded-xl shadow-xl border border-slate-100 dark:border-slate-800 animate-float" style="animation-delay: 1s;">
+                        <div class="flex items-center text-emerald-500">
+                            <svg class="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span class="text-sm font-bold text-slate-800 dark:text-slate-200">خروجی PDF باکیفیت</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ================= FEATURES SECTION ================= -->
+    <section id="features" class="py-20 sm:py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl sm:text-4xl font-extrabold mb-4">چرا QafCV؟</h2>
+                <p class="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">ابزارهای حرفه‌ای برای ساخت برند شخصی شما</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="group p-8 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-primary-200 dark:hover:border-primary-800 hover:shadow-xl transition-all duration-300">
+                    <div class="w-12 h-12 bg-primary-50 dark:bg-primary-900/30 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <svg class="w-6 h-6 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">پیش‌نمایش زنده</h3>
+                    <p class="text-slate-600 dark:text-slate-400 leading-relaxed">همزمان با تایپ اطلاعات، رزومه شما به صورت لحظه‌ای آپدیت می‌شود تا دقیقاً ببینید چه دریافت می‌کنید.</p>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="group p-8 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-primary-200 dark:hover:border-primary-800 hover:shadow-xl transition-all duration-300">
+                    <div class="w-12 h-12 bg-emerald-50 dark:bg-emerald-900/30 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <svg class="w-6 h-6 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">خروجی PDF بی‌نقص</h3>
+                    <p class="text-slate-600 dark:text-slate-400 leading-relaxed">رزومه خود را با کیفیت بالا و فونت استاندارد فارسی دانلود کنید. مناسب برای ارسال به سیستم‌های ATS.</p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="group p-8 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-primary-200 dark:hover:border-primary-800 hover:shadow-xl transition-all duration-300">
+                    <div class="w-12 h-12 bg-amber-50 dark:bg-amber-900/30 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <svg class="w-6 h-6 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">پورتفولیو آنلاین</h3>
+                    <p class="text-slate-600 dark:text-slate-400 leading-relaxed">علاوه بر PDF، یک لینک اختصاصی (qafcv.com/yourname) دریافت کنید تا در شبکه‌های اجتماعی به اشتراک بگذارید.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= TEMPLATES SHOWCASE ================= -->
+    <section id="templates" class="py-20 sm:py-24 bg-slate-100/50 dark:bg-slate-900/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl sm:text-4xl font-extrabold mb-4">قالب‌های متنوع و جذاب</h2>
+                <p class="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">قالبی که با شخصیت حرفه‌ای شما هم‌خوانی دارد انتخاب کنید</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Template 1: Modern Blue -->
+                <div class="group cursor-pointer">
+                    <div class="relative overflow-hidden rounded-2xl shadow-lg h-96 bg-white border-4 border-white dark:border-slate-800 group-hover:border-primary-500 transition-all duration-300">
+                        <div class="absolute top-0 right-0 w-2/3 h-full bg-primary-600"></div>
+                        <div class="absolute top-0 left-0 w-1/3 h-full p-4 flex flex-col justify-center space-y-2">
+                            <div class="w-16 h-16 rounded-full bg-slate-200 mx-auto"></div>
+                            <div class="h-2 w-full bg-slate-200 rounded"></div>
+                            <div class="h-2 w-3/4 bg-slate-200 rounded mx-auto"></div>
+                        </div>
+                        <div class="absolute top-0 right-0 w-2/3 h-full p-4 space-y-2">
+                            <div class="h-2 w-1/2 bg-white/80 rounded"></div>
+                            <div class="h-2 w-2/3 bg-white/50 rounded"></div>
+                            <div class="mt-4 space-y-1.5">
+                                <div class="h-1.5 w-full bg-white/40 rounded"></div>
+                                <div class="h-1.5 w-5/6 bg-white/40 rounded"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-center mt-4 font-bold text-lg">Modern Blue</p>
+                </div>
+
+                <!-- Template 2: Minimal White -->
+                <div class="group cursor-pointer">
+                    <div class="relative overflow-hidden rounded-2xl shadow-lg h-96 bg-white border-4 border-white dark:border-slate-800 group-hover:border-emerald-500 transition-all duration-300">
+                        <div class="p-6 space-y-4">
+                            <div class="text-center border-b border-slate-200 pb-4 space-y-2">
+                                <div class="w-20 h-20 rounded-full bg-slate-100 mx-auto"></div>
+                                <div class="h-3 w-32 bg-slate-300 rounded mx-auto"></div>
+                                <div class="h-2 w-24 bg-slate-200 rounded mx-auto"></div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="h-2 w-1/4 bg-slate-300 rounded"></div>
+                                <div class="h-1.5 w-full bg-slate-100 rounded"></div>
+                                <div class="h-1.5 w-5/6 bg-slate-100 rounded"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-center mt-4 font-bold text-lg">Minimal White</p>
+                </div>
+
+                <!-- Template 3: Professional Dark -->
+                <div class="group cursor-pointer">
+                    <div class="relative overflow-hidden rounded-2xl shadow-lg h-96 bg-slate-900 border-4 border-slate-900 group-hover:border-indigo-500 transition-all duration-300">
+                        <div class="absolute top-0 right-0 w-1/3 h-full bg-slate-800 p-4 flex flex-col items-center space-y-3 pt-8">
+                            <div class="w-16 h-16 rounded-full bg-slate-700"></div>
+                            <div class="h-2 w-full bg-slate-700 rounded"></div>
+                        </div>
+                        <div class="absolute top-0 left-0 w-2/3 h-full p-4 space-y-2">
+                            <div class="h-2 w-1/2 bg-slate-700 rounded"></div>
+                            <div class="h-1.5 w-full bg-slate-800 rounded"></div>
+                            <div class="h-1.5 w-4/5 bg-slate-800 rounded"></div>
+                            <div class="mt-4 h-2 w-1/3 bg-primary-500 rounded"></div>
+                            <div class="h-1.5 w-full bg-slate-800 rounded"></div>
+                        </div>
+                    </div>
+                    <p class="text-center mt-4 font-bold text-lg">Professional Dark</p>
+                </div>
+
+                <!-- Template 4: Creative -->
+                <div class="group cursor-pointer">
+                    <div class="relative overflow-hidden rounded-2xl shadow-lg h-96 bg-white border-4 border-white dark:border-slate-800 group-hover:border-rose-500 transition-all duration-300">
+                        <div class="absolute top-0 inset-x-0 h-1/3 bg-gradient-to-r from-rose-400 to-orange-400"></div>
+                        <div class="absolute top-1/4 right-6 w-20 h-20 rounded-full bg-white p-1">
+                            <div class="w-full h-full rounded-full bg-slate-200"></div>
+                        </div>
+                        <div class="absolute bottom-0 inset-x-0 h-2/3 p-4 space-y-2">
+                            <div class="mt-8 h-2 w-1/2 bg-slate-300 rounded"></div>
+                            <div class="h-1.5 w-full bg-slate-100 rounded"></div>
+                            <div class="h-1.5 w-3/4 bg-slate-100 rounded"></div>
+                            <div class="flex space-x-2 space-x-reverse pt-2">
+                                <div class="w-12 h-12 bg-rose-100 rounded-lg"></div>
+                                <div class="w-12 h-12 bg-orange-100 rounded-lg"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-center mt-4 font-bold text-lg">Creative</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= CTA SECTION ================= -->
+    <section class="py-20 sm:py-24">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="relative bg-gradient-to-l from-primary-600 to-indigo-700 rounded-3xl p-12 sm:p-16 overflow-hidden shadow-2xl">
+                <div class="absolute top-0 left-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+                <div class="absolute bottom-0 right-0 w-64 h-64 bg-emerald-400/20 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
+                <div class="relative">
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-4">امروز شروع به ساخت آینده‌ات کن</h2>
+                    <p class="text-lg text-primary-100 mb-8 max-w-2xl mx-auto">به هزاران حرفه‌ای بپیوندید که با QafCV مسیر شغلی خود را متحول کرده‌اند.</p>
+                    <a href="auth.html" class="inline-flex items-center justify-center px-8 py-4 text-base font-bold text-primary-700 bg-white hover:bg-slate-50 rounded-xl shadow-lg transition transform hover:-translate-y-0.5">
+                        همین الان رایگان شروع کن
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12"></path></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= FOOTER ================= -->
+    <footer class="border-t border-slate-200 dark:border-slate-800 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+                <div class="flex items-center space-x-2 space-x-reverse">
+                    <div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    </div>
+                    <span class="text-lg font-bold">QafCV</span>
+                </div>
+                <div class="flex space-x-6 space-x-reverse text-sm text-slate-500">
+                    <a href="#" class="hover:text-primary-600 transition">حریم خصوصی</a>
+                    <a href="#" class="hover:text-primary-600 transition">شرایط استفاده</a>
+                    <a href="#" class="hover:text-primary-600 transition">تماس با ما</a>
+                </div>
+                <p class="text-sm text-slate-400">© ۲۰۲۴ QafCV. تمام حقوق محفوظ است.</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

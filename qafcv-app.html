@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QafCV | پلتفرم ساخت رزومه هوشمند</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Vazirmatn', 'sans-serif'] },
+                    colors: {
+                        primary: { 50: '#eef2ff', 100: '#e0e7ff', 200: '#c7d2fe', 300: '#a5b4fc', 400: '#818cf8', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca', 800: '#3730a3', 900: '#312e81' },
+                        dark: { 800: '#1e293b', 900: '#0f172a', 950: '#020617' }
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.6s ease-out forwards',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        fadeInUp: { '0%': { opacity: 0, transform: 'translateY(20px)' }, '100%': { opacity: 1, transform: 'translateY(0)' } },
+                        float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Vazirmatn', sans-serif; }
+        [x-cloak] { display: none !important; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .dark ::-webkit-scrollbar-thumb { background: #334155; }
+        
+        .resume-preview { box-shadow: 0 10px 40px -10px rgba(0,0,0,0.2); }
+        .r-section-title { position: relative; padding-bottom: 0.5rem; margin-bottom: 1rem; border-bottom: 2px solid #e2e8f0; }
+        .r-section-title::after { content: ''; position: absolute; bottom: -2px; right: 0; width: 40px; height: 2px; background-color: #4f46e5; }
+        .r-section-title-dark { position: relative; padding-bottom: 0.5rem; margin-bottom: 1rem; border-bottom: 2px solid #334155; }
+        .r-section-title-dark::after { content: ''; position: absolute; bottom: -2px; right: 0; width: 40px; height: 2px; background-color: #818cf8; }
+
+        [contenteditable="true"] { outline: none; transition: all 0.2s ease; border-radius: 4px; padding: 2px 4px; margin: -2px -4px; cursor: text; }
+        [contenteditable="true"]:hover { background-color: rgba(99, 102, 241, 0.1); box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.3) inset; }
+        [contenteditable="true"]:focus { background-color: rgba(99, 102, 241, 0.15); box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.5) inset; }
+
+        input[type="range"] { -webkit-appearance: none; height: 6px; background: #e2e8f0; border-radius: 5px; outline: none; }
+        .dark input[type="range"] { background: #334155; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; background: #4f46e5; border-radius: 50%; cursor: pointer; border: 3px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body class="font-sans bg-slate-50 dark:bg-dark-950 text-slate-800 dark:text-slate-200 transition-colors duration-300" x-data="qafcvApp()" x-cloak>
+
+    <!-- ================= APP ROUTER ================= -->
+    
+    <!-- 1. LANDING PAGE -->
+    <div x-show="page === 'landing'">
+        <!-- Nav -->
+        <nav class="fixed top-0 inset-x-0 z-50 backdrop-blur-md bg-white/70 dark:bg-dark-950/70 border-b border-slate-200/50 dark:border-slate-800/50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
+                <div class="flex items-center space-x-2 space-x-reverse">
+                    <div class="w-9 h-9 bg-primary-600 rounded-xl flex items-center justify-center shadow-lg shadow-primary-600/30">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    </div>
+                    <span class="text-xl font-extrabold">QafCV</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-6 space-x-reverse">
+                    <a href="#templates" class="text-sm font-medium hover:text-primary-600">قالب‌ها</a>
+                    <a href="#features" class="text-sm font-medium hover:text-primary-600">امکانات</a>
+                    <button @click="darkMode = !darkMode; document.documentElement.classList.toggle('dark')" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">
+                        <svg x-show="!darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                        <svg x-show="darkMode" x-cloak class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    </button>
+                    <button @click="page='auth'" class="text-sm font-medium hover:text-primary-600">ورود</button>
+                    <button @click="page='auth'" class="text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 px-4 py-2 rounded-lg shadow-lg shadow-primary-600/30 transition">شروع رایگان</button>
+                </div>
+                <button @click="mobileMenu = !mobileMenu" class="md:hidden p-2"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
+            </div>
+        </nav>
+
+        <!-- Hero -->
+        <header class="relative pt-32 pb-20 sm:pt-40 sm:pb-24 overflow-hidden">
+            <div class="absolute inset-0 z-[-1]">
+                <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary-300/30 dark:bg-primary-900/20 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/4"></div>
+                <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-emerald-300/20 dark:bg-emerald-900/10 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/4"></div>
+            </div>
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-12 items-center">
+                <div class="text-center lg:text-right animate-fade-in-up">
+                    <div class="inline-flex items-center px-4 py-1.5 rounded-full bg-primary-50 dark:bg-primary-900/30 border border-primary-200 dark:border-primary-800 text-primary-600 dark:text-primary-300 text-sm font-medium mb-6">
+                        <span class="w-2 h-2 bg-primary-500 rounded-full ml-2 animate-pulse"></span> پلتفرم ساخت رزومه نسل جدید
+                    </div>
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight mb-6">رزومه‌ای بساز <br class="hidden sm:block"> که <span class="text-transparent bg-clip-text bg-gradient-to-l from-primary-600 to-emerald-500">استخدامت کند</span></h1>
+                    <p class="text-lg text-slate-600 dark:text-slate-400 mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed">اطلاعات خود را وارد کنید، قالب دلخواهتان را انتخاب کنید و در کمتر از ۱۰ دقیقه یک رزومه حرفه‌ای PDF و یک صفحه پورتفولیو آنلاین داشته باشید.</p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                        <button @click="page='auth'" class="inline-flex items-center justify-center px-8 py-3.5 text-base font-semibold text-white bg-primary-600 hover:bg-primary-700 rounded-xl shadow-lg shadow-primary-600/30 transition transform hover:-translate-y-0.5">شروع رایگان</button>
+                        <button @click="page='templates'" class="inline-flex items-center justify-center px-8 py-3.5 text-base font-semibold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition transform hover:-translate-y-0.5">مشاهده قالب‌ها</button>
+                    </div>
+                </div>
+                <div class="relative hidden lg:block animate-fade-in-up" style="animation-delay: 0.2s;">
+                    <div class="relative bg-white dark:bg-dark-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 p-6 transform rotate-3 hover:rotate-0 transition-transform duration-500 animate-float">
+                        <div class="flex items-center space-x-4 space-x-reverse pb-4 border-b border-slate-100 dark:border-slate-800">
+                            <div class="w-16 h-16 bg-gradient-to-br from-primary-500 to-emerald-400 rounded-full"></div>
+                            <div><div class="h-4 w-32 bg-slate-200 dark:bg-slate-700 rounded mb-2"></div><div class="h-3 w-24 bg-slate-100 dark:bg-slate-800 rounded"></div></div>
+                        </div>
+                        <div class="mt-6 space-y-4">
+                            <div class="h-3 w-full bg-slate-100 dark:bg-slate-800 rounded"></div>
+                            <div class="h-3 w-5/6 bg-slate-100 dark:bg-slate-800 rounded"></div>
+                            <div class="grid grid-cols-2 gap-4 pt-4">
+                                <div class="h-20 bg-primary-50 dark:bg-primary-900/20 rounded-lg p-3"><div class="h-2 w-16 bg-primary-200 dark:bg-primary-800 rounded mb-2"></div><div class="h-2 w-full bg-primary-100 dark:bg-primary-900 rounded"></div></div>
+                                <div class="h-20 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg p-3"><div class="h-2 w-16 bg-emerald-200 dark:bg-emerald-800 rounded mb-2"></div><div class="h-2 w-full bg-emerald-100 dark:bg-emerald-900 rounded"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Features -->
+        <section id="features" class="py-20 sm:py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16"><h2 class="text-3xl sm:text-4xl font-extrabold mb-4">چرا QafCV؟</h2><p class="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">ابزارهای حرفه‌ای برای ساخت برند شخصی شما</p></div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="group p-8 bg-white dark:bg-dark-900 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-primary-200 dark:hover:border-primary-800 hover:shadow-xl transition-all duration-300">
+                        <div class="w-12 h-12 bg-primary-50 dark:bg-primary-900/30 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform"><svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg></div>
+                        <h3 class="text-xl font-bold mb-3">پیش‌نمایش زنده</h3><p class="text-slate-600 dark:text-slate-400 leading-relaxed">همزمان با تایپ اطلاعات، رزومه شما به صورت لحظه‌ای آپدیت می‌شود.</p>
+                    </div>
+                    <div class="group p-8 bg-white dark:bg-dark-900 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-primary-200 dark:hover:border-primary-800 hover:shadow-xl transition-all duration-300">
+                        <div class="w-12 h-12 bg-emerald-50 dark:bg-emerald-900/30 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform"><svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg></div>
+                        <h3 class="text-xl font-bold mb-3">خروجی PDF بی‌نقص</h3><p class="text-slate-600 dark:text-slate-400 leading-relaxed">رزومه خود را با کیفیت بالا و فونت استاندارد فارسی دانلود کنید.</p>
+                    </div>
+                    <div class="group p-8 bg-white dark:bg-dark-900 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-primary-200 dark:hover:border-primary-800 hover:shadow-xl transition-all duration-300">
+                        <div class="w-12 h-12 bg-amber-50 dark:bg-amber-900/30 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform"><svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg></div>
+                        <h3 class="text-xl font-bold mb-3">پورتفولیو آنلاین</h3><p class="text-slate-600 dark:text-slate-400 leading-relaxed">یک لینک اختصاصی دریافت کنید تا در شبکه‌های اجتماعی به اشتراک بگذارید.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Footer -->
+        <footer class="border-t border-slate-200 dark:border-slate-800 py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+                <div class="flex items-center space-x-2 space-x-reverse"><div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center"><svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg></div><span class="text-lg font-bold">QafCV</span></div>
+                <p class="text-sm text-slate-400">© ۲۰۲۴ QafCV. تمام حقوق محفوظ است.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- 2. AUTH PAGE -->
+    <div x-show="page === 'auth'" class="min-h-screen flex flex-col lg:flex-row">
+        <div class="flex-1 flex flex-col justify-center px-6 sm:px-12 py-12 lg:px-16">
+            <div class="max-w-md w-full mx-auto">
+                <button @click="page='landing'" class="flex items-center text-slate-500 hover:text-primary-600 mb-8 transition"><svg class="w-5 h-5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg> بازگشت به خانه</button>
+                <div class="flex bg-slate-100 dark:bg-slate-900 p-1 rounded-xl mb-8">
+                    <button @click="authTab='login'" :class="authTab === 'login' ? 'bg-white dark:bg-slate-800 shadow-sm text-primary-600' : 'text-slate-500'" class="flex-1 py-2 rounded-lg text-sm font-medium transition-all">ورود</button>
+                    <button @click="authTab='register'" :class="authTab === 'register' ? 'bg-white dark:bg-slate-800 shadow-sm text-primary-600' : 'text-slate-500'" class="flex-1 py-2 rounded-lg text-sm font-medium transition-all">ثبت‌نام</button>
+                </div>
+                <form x-show="authTab === 'login'" class="space-y-6">
+                    <div><h2 class="text-2xl font-bold">خوش آمدید 👋</h2><p class="text-sm text-slate-500 mt-1">برای ادامه وارد حساب کاربری خود شوید.</p></div>
+                    <input type="email" placeholder="ایمیل آدرس" class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-transparent focus:border-primary-500 outline-none">
+                    <input type="password" placeholder="رمز عبور" class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-transparent focus:border-primary-500 outline-none">
+                    <button @click.prevent="page='dashboard'" type="button" class="w-full py-3.5 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl shadow-lg shadow-primary-600/30 transition">ورود به حساب</button>
+                </form>
+                <form x-show="authTab === 'register'" x-cloak class="space-y-6">
+                    <div><h2 class="text-2xl font-bold">ساخت حساب کاربری 🚀</h2><p class="text-sm text-slate-500 mt-1">در کمتر از ۱ دقیقه ثبت‌نام کنید.</p></div>
+                    <input type="text" placeholder="نام و نام خانوادگی" class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-transparent focus:border-primary-500 outline-none">
+                    <input type="email" placeholder="ایمیل آدرس" class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-transparent focus:border-primary-500 outline-none">
+                    <input type="password" placeholder="رمز عبور" class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-transparent focus:border-primary-500 outline-none">
+                    <button @click.prevent="page='dashboard'" type="button" class="w-full py-3.5 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl shadow-lg shadow-primary-600/30 transition">ثبت‌نام رایگان</button>
+                </form>
+            </div>
+        </div>
+        <div class="hidden lg:flex flex-1 bg-primary-600 relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-br from-primary-600 to-indigo-800"></div>
+            <div class="relative z-10 flex flex-col justify-center p-16 text-white">
+                <h1 class="text-4xl font-extrabold leading-tight mb-6">مسیر شغلی خود را <br> حرفه‌ای پیش ببرید.</h1>
+                <p class="text-primary-100 text-lg mb-8 leading-relaxed">به جامعه‌ای از هزاران متخصص بپیوندید که با استفاده از ابزارهای هوشمند QafCV، رزومه‌هایی خیره‌کننده می‌سازند.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. APP LAYOUT (Dashboard, Builder, etc.) -->
+    <div x-show="['dashboard', 'builder', 'templates', 'settings'].includes(page)" class="flex h-screen overflow-hidden">
+        
+        <!-- Sidebar -->
+        <aside class="fixed top-0 right-0 z-40 h-screen w-64 bg-white dark:bg-dark-900 border-l border-slate-200 dark:border-slate-800 transition-transform duration-300 lg:translate-x-0" :class="sidebarOpen ? 'translate-x-0' : 'translate-x-full'">
+            <div class="h-16 flex items-center justify-between px-6 border-b border-slate-200 dark:border-slate-800">
+                <div class="flex items-center space-x-2 space-x-reverse"><div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center"><svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg></div><span class="text-lg font-extrabold">QafCV</span></div>
+                <button @click="sidebarOpen = false" class="lg:hidden text-slate-400"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+            </div>
+            <nav class="p-4 space-y-1">
+                <button @click="page='dashboard'; sidebarOpen=false" :class="page === 'dashboard' ? 'bg-primary-50 dark:bg-primary-500/10 text-primary-600' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'" class="w-full flex items-center space-x-3 space-x-reverse px-4 py-2.5 rounded-xl font-medium transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg><span>داشبورد</span></button>
+                <button @click="page='builder'; sidebarOpen=false" :class="page === 'builder' ? 'bg-primary-50 dark:bg-primary-500/10 text-primary-600' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'" class="w-full flex items-center space-x-3 space-x-reverse px-4 py-2.5 rounded-xl font-medium transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg><span>ساخت رزومه</span></button>
+                <button @click="page='templates'; sidebarOpen=false" :class="page === 'templates' ? 'bg-primary-50 dark:bg-primary-500/10 text-primary-600' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'" class="w-full flex items-center space-x-3 space-x-reverse px-4 py-2.5 rounded-xl font-medium transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path></svg><span>قالب‌ها</span></button>
+                <button @click="page='settings'; sidebarOpen=false" :class="page === 'settings' ? 'bg-primary-50 dark:bg-primary-500/10 text-primary-600' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'" class="w-full flex items-center space-x-3 space-x-reverse px-4 py-2.5 rounded-xl font-medium transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg><span>تنظیمات</span></button>
+            </nav>
+            <div class="absolute bottom-4 right-4 left-4">
+                <div class="bg-gradient-to-br from-primary-600 to-indigo-700 rounded-2xl p-4 text-white"><h4 class="font-bold text-sm mb-1">ارتقا به Pro</h4><p class="text-xs text-primary-100 mb-3">دسترسی به تمام قالب‌ها</p><button @click="page='settings'" class="w-full bg-white text-primary-700 text-xs font-bold py-2 rounded-lg">ارتقا حساب</button></div>
+            </div>
+        </aside>
+        <div x-show="sidebarOpen" x-cloak @click="sidebarOpen = false" x-transition.opacity class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-30 lg:hidden"></div>
+
+        <!-- Main Content -->
+        <div class="flex-1 lg:mr-64 h-screen overflow-y-auto">
+            <header class="h-16 bg-white dark:bg-dark-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-6 sticky top-0 z-20">
+                <button @click="sidebarOpen = true" class="lg:hidden text-slate-500"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
+                <div class="hidden sm:block"><h1 class="text-lg font-bold" x-text="pageTitles[page]"></h1></div>
+                <div class="flex items-center space-x-4 space-x-reverse">
+                    <button @click="page='portfolio'" class="text-sm text-primary-600 font-medium hidden sm:block">مشاهده پورتفولیو</button>
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Hamid" class="w-9 h-9 rounded-full bg-slate-100">
+                </div>
+            </header>
+
+            <!-- Dashboard View -->
+            <main x-show="page === 'dashboard'" class="p-6 lg:p-8 space-y-6">
+                <div class="bg-white dark:bg-dark-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row items-start md:items-center justify-between">
+                    <div><h2 class="text-xl font-bold mb-1">سلام حمیدالله 👋</h2><p class="text-slate-500 text-sm">آماده‌ای رزومه بعدی‌ات را بسازی؟</p></div>
+                    <button @click="page='builder'" class="mt-4 md:mt-0 inline-flex items-center px-4 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl shadow-lg shadow-primary-600/30 transition"><svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg> ساخت رزومه جدید</button>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white dark:bg-dark-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800"><div class="w-12 h-12 rounded-xl bg-primary-50 dark:bg-primary-500/10 flex items-center justify-center mb-4"><svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg></div><h3 class="text-3xl font-extrabold">۳</h3><p class="text-slate-500 text-sm mt-1">رزومه‌های ساخته شده</p></div>
+                    <div class="bg-white dark:bg-dark-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800"><div class="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center mb-4"><svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg></div><h3 class="text-3xl font-extrabold">۸۴</h3><p class="text-slate-500 text-sm mt-1">دانلود رزومه</p></div>
+                    <div class="bg-white dark:bg-dark-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800"><div class="w-12 h-12 rounded-xl bg-amber-50 dark:bg-amber-500/10 flex items-center justify-center mb-4"><svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg></div><h3 class="text-3xl font-extrabold">۲۴</h3><p class="text-slate-500 text-sm mt-1">بازدید پورتفولیو</p></div>
+                </div>
+            </main>
+
+            <!-- Builder View -->
+            <main x-show="page === 'builder'" class="flex flex-col lg:flex-row h-[calc(100vh-4rem)]">
+                <div class="w-full lg:w-1/2 p-6 space-y-6 overflow-y-auto" :class="mobileView === 'edit' ? 'block' : 'hidden lg:block'">
+                    <div class="flex items-center gap-4 mb-4">
+                        <button @click="page='dashboard'" class="text-slate-500 hover:text-primary-600"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg></button>
+                        <h2 class="text-xl font-bold">اطلاعات شخصی</h2>
+                    </div>
+                    <div class="flex flex-col items-center mb-4">
+                        <div class="w-28 h-28 rounded-full bg-slate-100 border-2 border-dashed border-slate-300 flex items-center justify-center overflow-hidden cursor-pointer hover:border-primary-500 relative group">
+                            <img x-show="cvData.photo" :src="cvData.photo" class="w-full h-full object-cover">
+                            <svg x-show="!cvData.photo" class="w-10 h-10 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        </div>
+                        <input type="file" accept="image/*" @change="handlePhotoUpload($event)" class="mt-3 text-xs text-slate-500 file:mr-2 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:bg-primary-50 file:text-primary-600 cursor-pointer">
+                    </div>
+                    <input type="text" x-model="cvData.name" placeholder="نام و نام خانوادگی" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-transparent focus:border-primary-500 outline-none">
+                    <input type="text" x-model="cvData.title" placeholder="عنوان شغلی" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-transparent focus:border-primary-500 outline-none">
+                    <input type="email" x-model="cvData.email" placeholder="ایمیل" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-transparent focus:border-primary-500 outline-none">
+                    <input type="text" x-model="cvData.phone" placeholder="شماره تماس" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-transparent focus:border-primary-500 outline-none">
+                    <input type="text" x-model="cvData.address" placeholder="آدرس" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-transparent focus:border-primary-500 outline-none">
+                    <textarea x-model="cvData.about" rows="4" placeholder="درباره من" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-transparent focus:border-primary-500 outline-none resize-none"></textarea>
+                    
+                    <h3 class="text-lg font-bold pt-4">مهارت‌ها</h3>
+                    <template x-for="(skill, index) in cvData.skills" :key="index">
+                        <div class="bg-slate-50 dark:bg-dark-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 flex items-center gap-4 mb-4">
+                            <input type="text" x-model="skill.name" placeholder="نام مهارت" class="flex-1 px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-dark-950 outline-none text-sm">
+                            <div class="w-1/2">
+                                <input type="range" x-model="skill.level" min="0" max="100" class="w-full mt-2">
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- Mobile Toggle -->
+                <div class="lg:hidden flex bg-slate-100 dark:bg-slate-800 p-1 rounded-lg m-4">
+                    <button @click="mobileView = 'edit'" :class="mobileView === 'edit' ? 'bg-white dark:bg-slate-700 text-primary-600' : 'text-slate-500'" class="flex-1 py-1 rounded-md text-xs font-medium">ویرایش</button>
+                    <button @click="mobileView = 'preview'" :class="mobileView === 'preview' ? 'bg-white dark:bg-slate-700 text-primary-600' : 'text-slate-500'" class="flex-1 py-1 rounded-md text-xs font-medium">پیش‌نمایش</button>
+                </div>
+
+                <!-- Live Preview -->
+                <div class="w-full lg:w-1/2 h-[calc(100vh-4rem)] sticky top-16 bg-slate-200 dark:bg-dark-900 p-6 overflow-y-auto" :class="mobileView === 'preview' ? 'block' : 'hidden lg:block'">
+                    <div class="resume-preview bg-white w-full max-w-[800px] mx-auto aspect-[1/1.414] flex shadow-2xl overflow-hidden rounded-lg">
+                        <aside class="w-1/3 bg-slate-800 text-slate-300 p-6 space-y-6">
+                            <div class="flex flex-col items-center"><div class="w-24 h-24 rounded-full bg-slate-700 border-4 border-primary-500 mb-4 flex items-center justify-center text-3xl font-bold text-white overflow-hidden"><img x-show="cvData.photo" :src="cvData.photo" class="w-full h-full object-cover"><span x-show="!cvData.photo" x-text="cvData.name ? cvData.name.charAt(0) : '؟'"></span></div></div>
+                            <div><h3 class="r-section-title-dark text-white text-sm font-bold">اطلاعات تماس</h3><ul class="space-y-2 text-xs text-slate-400"><li x-show="cvData.email" class="break-all" contenteditable="true" @input="cvData.email = $event.target.textContent" x-text="cvData.email"></li><li x-show="cvData.phone" contenteditable="true" @input="cvData.phone = $event.target.textContent" x-text="cvData.phone"></li><li x-show="cvData.address" contenteditable="true" @input="cvData.address = $event.target.textContent" x-text="cvData.address"></li></ul></div>
+                            <div><h3 class="r-section-title-dark text-white text-sm font-bold">مهارت‌ها</h3><div class="space-y-3"><template x-for="(skill, index) in cvData.skills" :key="index"><div><p class="text-xs font-medium mb-1 flex justify-between text-slate-300"><span contenteditable="true" @input="skill.name = $event.target.textContent" x-text="skill.name"></span><span class="text-slate-500" x-text="skill.level + '%'"></span></p><div class="w-full bg-slate-700 rounded-full h-1.5"><div class="bg-primary-500 h-1.5 rounded-full transition-all duration-500" :style="`width: ${skill.level}%`"></div></div></div></template></div></div>
+                        </aside>
+                        <main class="w-2/3 p-8 text-slate-800 space-y-8 overflow-y-auto">
+                            <div class="mb-2"><h1 contenteditable="true" @input="cvData.name = $event.target.textContent" class="text-3xl font-extrabold text-slate-900" x-text="cvData.name || 'نام شما'"></h1><p contenteditable="true" @input="cvData.title = $event.target.textContent" class="text-lg text-primary-600 font-medium mt-1" x-text="cvData.title || 'عنوان شغلی'"></p></div>
+                            <div x-show="cvData.about"><h3 class="r-section-title text-slate-900 text-sm font-bold">درباره من</h3><p contenteditable="true" @input="cvData.about = $event.target.textContent" class="text-sm text-slate-600 leading-relaxed text-justify" x-text="cvData.about"></p></div>
+                        </main>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Templates View -->
+            <main x-show="page === 'templates'" class="p-6 lg:p-8">
+                <div class="text-center mb-12"><h2 class="text-3xl font-extrabold mb-2">قالب خود را انتخاب کنید</h2><p class="text-slate-500">قالبی که با شخصیت حرفه‌ای شما هم‌خوانی دارد را انتخاب کنید</p></div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="relative cursor-pointer ring-4 ring-primary-500 rounded-2xl overflow-hidden"><div class="h-96 bg-white border-b border-slate-100 relative"><div class="absolute top-0 right-0 w-2/3 h-full bg-primary-600"></div><div class="absolute top-0 left-0 w-1/3 h-full p-4 flex flex-col justify-center space-y-2"><div class="w-16 h-16 rounded-full bg-slate-200 mx-auto"></div><div class="h-2 w-full bg-slate-200 rounded"></div></div><div class="absolute top-0 right-0 w-2/3 h-full p-4 space-y-2"><div class="h-2 w-1/2 bg-white/80 rounded"></div></div></div><div class="p-4 bg-white dark:bg-dark-900 flex justify-between items-center"><span class="font-bold text-sm">Modern Blue</span><span class="text-xs bg-primary-50 text-primary-600 px-2 py-1 rounded-full">انتخاب شده</span></div></div>
+                    <div class="relative cursor-pointer rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800"><div class="h-96 bg-white p-6 space-y-4"><div class="text-center border-b border-slate-200 pb-4 space-y-2"><div class="w-20 h-20 rounded-full bg-slate-100 mx-auto"></div><div class="h-3 w-32 bg-slate-300 rounded mx-auto"></div></div><div class="h-2 w-1/4 bg-slate-300 rounded"></div><div class="h-1.5 w-full bg-slate-100 rounded"></div></div><div class="p-4 bg-white dark:bg-dark-900"><span class="font-bold text-sm">Minimal White</span></div></div>
+                </div>
+            </main>
+
+            <!-- Settings View -->
+            <main x-show="page === 'settings'" class="p-6 lg:p-8 max-w-4xl mx-auto">
+                <div class="flex justify-center mb-8 bg-white dark:bg-dark-900 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-800 max-w-md mx-auto">
+                    <button @click="settingsTab='profile'" :class="settingsTab === 'profile' ? 'bg-primary-600 text-white' : 'text-slate-500'" class="flex-1 py-2 rounded-xl text-sm font-medium">پروفایل</button>
+                    <button @click="settingsTab='link'" :class="settingsTab === 'link' ? 'bg-primary-600 text-white' : 'text-slate-500'" class="flex-1 py-2 rounded-xl text-sm font-medium">لینک پورتفولیو</button>
+                    <button @click="settingsTab='plans'" :class="settingsTab === 'plans' ? 'bg-primary-600 text-white' : 'text-slate-500'" class="flex-1 py-2 rounded-xl text-sm font-medium">اشتراک</button>
+                </div>
+                <div x-show="settingsTab === 'profile'" class="bg-white dark:bg-dark-900 rounded-2xl p-8 border border-slate-200 dark:border-slate-800 space-y-6">
+                    <div class="flex items-center gap-4 pb-6 border-b border-slate-100 dark:border-slate-800"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Hamid" class="w-20 h-20 rounded-full bg-slate-100"><div><button class="text-sm text-primary-600 font-medium">تغییر عکس پروفایل</button><p class="text-xs text-slate-400 mt-1">فایل‌های PNG یا JPG حداکثر ۲ مگابایت</p></div></div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6"><input type="text" value="حمیدالله کریمی" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-transparent focus:border-primary-500 outline-none"><input type="email" value="hamid@qafcv.com" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-transparent focus:border-primary-500 outline-none"></div>
+                    <button class="px-6 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl">ذخیره تغییرات</button>
+                </div>
+                <div x-show="settingsTab === 'plans'" x-cloak class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+                    <div class="bg-white dark:bg-dark-900 rounded-2xl p-8 border border-slate-200 dark:border-slate-800"><h3 class="text-xl font-bold mb-2">رایگان</h3><p class="text-4xl font-extrabold mb-6">۰ تومان</p><ul class="space-y-3 text-sm text-slate-600 mb-8"><li>ساخت ۱ رزومه</li><li>دسترسی به ۲ قالب پایه</li></ul><button class="w-full py-3 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-xl">پلن فعلی</button></div>
+                    <div class="bg-gradient-to-br from-primary-600 to-indigo-700 rounded-2xl p-8 text-white transform scale-105"><h3 class="text-xl font-bold mb-2">حرفه‌ای (Pro)</h3><p class="text-4xl font-extrabold mb-6">۱۴۹,۰۰۰ تومان</p><ul class="space-y-3 text-sm text-primary-50 mb-8"><li>ساخت رزومه نامحدود</li><li>دسترسی به تمام قالب‌ها</li></ul><button class="w-full py-3 bg-white text-primary-700 rounded-xl font-bold">ارتقا به Pro</button></div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- 4. PORTFOLIO PAGE -->
+    <div x-show="page === 'portfolio'">
+        <nav class="fixed top-0 inset-x-0 z-50 p-4 transition-all duration-300" :class="darkMode ? 'glass-nav shadow-sm py-2' : 'bg-transparent py-4'" style="backdrop-filter: blur(12px);">
+            <div class="max-w-5xl mx-auto flex justify-between items-center">
+                <button @click="page='dashboard'" class="text-xl font-extrabold">کوروش نصیری</button>
+                <div class="hidden md:flex items-center space-x-6 space-x-reverse text-sm font-medium">
+                    <a href="#about" class="hover:text-primary-600">درباره من</a>
+                    <a href="#projects" class="hover:text-primary-600">پروژه‌ها</a>
+                    <button class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700">دانلود رزومه</button>
+                </div>
+            </div>
+        </nav>
+        <header class="min-h-screen flex items-center justify-center relative overflow-hidden pt-20 pb-10">
+            <div class="absolute inset-0 z-[-1]"><div class="absolute top-0 right-0 w-96 h-96 bg-primary-200/40 rounded-full blur-[100px]"></div><div class="absolute bottom-0 left-0 w-96 h-96 bg-purple-200/30 rounded-full blur-[100px]"></div></div>
+            <div class="max-w-4xl mx-auto px-4 text-center">
+                <div class="relative inline-block mb-8"><div class="absolute inset-0 bg-gradient-to-r from-primary-500 to-purple-500 rounded-full blur-xl opacity-75 animate-pulse"></div><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Koroush" class="relative w-40 h-40 rounded-full border-4 border-white shadow-2xl" alt="User"></div>
+                <h1 class="text-4xl md:text-6xl font-extrabold mb-4">سلام، من <span class="text-transparent bg-clip-text bg-gradient-to-l from-primary-600 to-purple-600">کوروش نصیری</span> هستم</h1>
+                <p class="text-lg md:text-xl text-slate-600 dark:text-slate-400 mb-8 max-w-2xl mx-auto">طراح گرافیک خلاق با بیش از ۶ سال تجربه در زمینه برندینگ و هویت بصری.</p>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <button @click="page='dashboard'" class="px-8 py-3.5 bg-slate-200 dark:bg-slate-800 font-semibold rounded-xl transition">بازگشت به پنل</button>
+                    <button class="px-8 py-3.5 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl shadow-lg shadow-primary-600/30 transition">دانلود رزومه (PDF)</button>
+                </div>
+            </div>
+        </header>
+        <section id="projects" class="py-20 bg-slate-100/50 dark:bg-dark-900/50">
+            <div class="max-w-5xl mx-auto px-4">
+                <h2 class="text-3xl font-extrabold mb-12 text-center">پروژه‌های منتخب</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="group relative rounded-2xl overflow-hidden shadow-lg cursor-pointer h-64 bg-slate-300"><div class="absolute inset-0 bg-gradient-to-t from-slate-900/90 to-transparent flex flex-col justify-end p-6"><span class="text-xs text-primary-300 font-semibold">برندینگ</span><h3 class="text-white font-bold text-xl">هویت بصری کافه رنگ</h3></div></div>
+                    <div class="group relative rounded-2xl overflow-hidden shadow-lg cursor-pointer h-64 bg-slate-400"><div class="absolute inset-0 bg-gradient-to-t from-slate-900/90 to-transparent flex flex-col justify-end p-6"><span class="text-xs text-primary-300 font-semibold">طراحی UI</span><h3 class="text-white font-bold text-xl">اپلیکیشن باشگاه ورزشی</h3></div></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ================= ALPINE.JS STATE ================= -->
+    <script>
+        function qafcvApp() {
+            return {
+                page: 'landing', // 'landing', 'auth', 'dashboard', 'builder', 'templates', 'settings', 'portfolio'
+                darkMode: false,
+                sidebarOpen: false,
+                mobileMenu: false,
+                authTab: 'login',
+                settingsTab: 'profile',
+                mobileView: 'edit', // For builder on mobile
+                pageTitles: { 'dashboard': 'داشبورد', 'builder': 'ساخت رزومه', 'templates': 'انتخاب قالب', 'settings': 'تنظیمات' },
+                cvData: {
+                    photo: null,
+                    name: 'حمیدالله کریمی',
+                    title: 'توسعه‌دهنده ارشد فرانت‌اند',
+                    email: 'hamid@qafcv.com',
+                    phone: '۰۹۱۲۳۴۵۶۷۸۹',
+                    address: 'تهران، خیابان آزادی',
+                    about: 'برنامه‌نویس حرفه‌ای با بیش از ۵ سال تجربه در توسعه رابط‌های کاربری مدرن و مقیاس‌پذیر.',
+                    skills: [
+                        { name: 'React.js', level: 90 },
+                        { name: 'TailwindCSS', level: 85 }
+                    ]
+                },
+                handlePhotoUpload(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (event) => { this.cvData.photo = event.target.result; };
+                        reader.readAsDataURL(file);
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
