@@ -3,7 +3,7 @@
 A web project for building and customizing professional CVs/resumes.
 
 ## 🌐 Demo
-[View Live Demo](https://USERNAME.github.io/qafcv_dv/)
+[View Live Demo](https://hamidullahkarimi766.github.io/qafdevCV)
 
 ## ✨ Features
 - Create professional CVs
